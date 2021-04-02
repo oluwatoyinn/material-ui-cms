@@ -15,7 +15,7 @@ const initialState ={
     email:'',
     mobile:'',
     city:'',
-    gender:'male',
+    gender:'male', 
     departmentId:'',
     employDate:new Date(),
     isConfirmed:false
@@ -24,24 +24,39 @@ const initialState ={
 
 const Employeeform = () => {
 
-    const validate = () =>{
-        let valid ={}
-        valid.fullName = values.fullName ? "" : "Name is required"
-        valid.email = (/$^|.+@.+..+/).test(values.email)? "": "Invalid email"
-        valid.mobile = values.mobile.length > 9 ?"":"Minimum 10 numbers required"
-        valid.departmentId = values.fullName.length > 0 ?"":"Department is a required fields"
+    const validate = (fieldValues = values) =>{
+        let valid ={...errors}
+        if('fullName' in fieldValues)
+        // valid.fullName = values.fullName ? "" : "Name is required"
+        valid.fullName = fieldValues.fullName ? "" : "Name is required"
+        if('email' in fieldValues)
+        valid.email = (/$^|.+@.+..+/).test(fieldValues.email)? "": "Invalid email"
+        if('mobile' in fieldValues)
+        valid.mobile = fieldValues.mobile.length > 9 ? "":"Minimum 10 numbers required"
+        if('departmentId' in fieldValues)
+        valid.departmentId = fieldValues.departmentId.length > 0 ? "":"Department is a required fields"
         setErrors({
             ...valid
         })
+
+        if(fieldValues ==values)
         return Object.values(valid).every(x => x =="")
     }
     
-    const {values, setValues, handleChange, errors, setErrors, resetForm} = CustomState(initialState)
+    const {values, 
+        setValues, 
+        handleChange, 
+        errors, 
+        setErrors, 
+        resetForm} = CustomState(initialState, true, validate)
 
     const handleSubmit = (e)=>{
         e.preventDefault()
-        if(validate())
-        window.alert("test")
+            if(validate()){ 
+                employeeService.insertEmployee(values)
+                resetForm()
+            window.alert("test") 
+        }
     }
      return (
          <div>

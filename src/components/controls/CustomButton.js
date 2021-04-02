@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme=>({
     }
 }))
 
-export default function Custombutton(props) {
+export default function CustomButton(props) {
 
     const classes = useStyles()
     const {text, size, color, variant, onClick, ...other} =props 
